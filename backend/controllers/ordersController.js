@@ -37,5 +37,18 @@ exports.getorderss = async (req, res) => {
     res.status(500).json({ error: 'Error fetching orders', details: err.message });
   }
 };
-
+exports.deleteOrder = async (req, res) => {
+  const { id } = req.params; // Obtener el ID de la orden desde los parámetros
+  try {
+    const order = await Orders.findByPk(id); // Buscar la orden por su ID
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    await order.destroy(); // Eliminar la orden
+    res.status(200).json({ message: 'Order deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting order:', err.message);
+    res.status(500).json({ error: 'Error deleting order', details: err.message });
+  }
+};
 

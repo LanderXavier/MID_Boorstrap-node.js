@@ -95,12 +95,12 @@ $('#addOrderForm').submit(function (e) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token'); // Obtén el token almacenado
-  const currentPage = window.location.pathname.split('/').pop(); // Obtén el nombre del archivo actual
+  const token = localStorage.getItem('token');
+  const currentPage = window.location.pathname.split('/').pop();
 
   if (!token && currentPage === 'index.html') {
     alert('No estás autenticado. Por favor, inicia sesión.');
-    window.location.href = 'login.html'; // Redirige al login si no hay token y estás en index.html
+    window.location.href = 'login.html';
     return;
   }
 
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('http://localhost:3000/api/orderss', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+        Authorization: `Bearer ${token}`,
       },
     })
       .then(response => {
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(data => {
         const tableBody = document.getElementById('orderTableBody');
-        tableBody.innerHTML = ''; // Limpia el contenido existente
+        tableBody.innerHTML = '';
         data.orderss.forEach(order => {
           const row = `
             <tr>
@@ -138,11 +138,36 @@ document.addEventListener('DOMContentLoaded', () => {
           `;
           tableBody.innerHTML += row;
         });
+
+        // Agregar evento de clic para los botones de eliminar
+        document.querySelectorAll('.delete-order').forEach(button => {
+          button.addEventListener('click', function () {
+            const orderId = this.getAttribute('data-id');
+            if (confirm('Are you sure you want to delete this order?')) {
+              fetch(`http://localhost:3000/api/orderss/${orderId}`, {
+                method: 'DELETE',
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error('Error deleting order');
+                  }
+                  alert('Order deleted successfully!');
+                  location.reload(); // Recargar la página
+                })
+                .catch(error => {
+                  console.error('Error deleting order:', error);
+                  alert('Failed to delete order. Please try again.');
+                });
+            }
+          });
+        });
       })
       .catch(error => {
         console.error('Error al cargar las órdenes:', error);
         alert('No se pudieron cargar las órdenes. Verifica tu autenticación.');
       });
   }
-
 });
