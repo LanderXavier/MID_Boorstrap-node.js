@@ -30,7 +30,7 @@ exports.createorders = async (req, res) => {
 
 exports.getorderss = async (req, res) => {
   try {
-    const orderss = await Orders.findAll(); // Use 'Orders' model
+    const orderss = await Orders.findAll(); // Asegúrate de que la base de datos esté conectada
     res.status(200).json({ orderss });
   } catch (err) {
     console.error('Error fetching orders:', err.message);

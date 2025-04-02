@@ -34,14 +34,15 @@ $('#loadorderss').click(function () {
           Authorization: `Bearer ${token}` // Incluye el token en el encabezado
       },
       success: function (data) {
+          console.log('Orders fetched:', data); // Agrega este log
           $('#ordersList').empty();
           data.orderss.forEach(function (orders) {
               $('#ordersList').append(`<li class="list-group-item">${orders.title}</li>`);
           });
       },
       error: function (error) {
-          console.error('Error al cargar las tareas:', error);
-          alert('No se pudieron cargar las tareas. Verifica tu autenticación.');
+          console.error('Error al cargar las órdenes:', error); // Agrega este log
+          alert('No se pudieron cargar las órdenes. Verifica tu autenticación.');
       }
   });
 });

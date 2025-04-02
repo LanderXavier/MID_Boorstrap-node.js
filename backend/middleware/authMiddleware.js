@@ -5,6 +5,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
 
 function authenticateToken(req, res, next) {
   const token = req.header("Authorization");
+  console.log("Token recibido:", token);
 
   if (!token) {
     return res.status(401).json({ message: "Access Denied: No Token Provided" });
